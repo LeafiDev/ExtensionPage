@@ -265,7 +265,8 @@ class Tweakpane {
 
     const stage = document.querySelector('.stage_stage_1fD7k');
     if (stage) {
-      stage.appendChild(pane.element);
+      Scratch.renderer.addOverlay(pane.element, "scale")
+      pane.element.style.pointerEvents = 'auto';
     } else {
       document.body.appendChild(pane.element);
     }
@@ -516,5 +517,6 @@ class Tweakpane {
     return v && typeof v.y === 'number' ? v.y : 0;
   }
 }
+
 
 Scratch.extensions.register(new Tweakpane());
