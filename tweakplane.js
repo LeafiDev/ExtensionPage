@@ -8,6 +8,7 @@ class Tweakpane {
     this.tweakpaneReady = false;
     this.eventValues = {}; // Store event values
     this.buttonPressQueue = []; // Queue of button labels that were pressed
+    this.paneFoldStates = {}; // Track fold state of panes: {ID: false (expanded) or true (collapsed)}
 
     this.loadTweakpane();
   }
@@ -203,6 +204,14 @@ class Tweakpane {
           text: 'Value Retrieval',
         },
         {
+          opcode: 'isPaneOpen',
+          blockType: Scratch.BlockType.BOOLEAN,
+          text: 'Pane [ID] is open?',
+          arguments: {
+            ID: { type: Scratch.ArgumentType.STRING, defaultValue: 'myPanel' },
+          },
+        },
+        {
           opcode: 'getColorValue',
           blockType: Scratch.BlockType.REPORTER,
           text: 'Value of color [LABEL]',
@@ -281,6 +290,22 @@ class Tweakpane {
             LABEL: { type: Scratch.ArgumentType.STRING, defaultValue: 'Click Me' },
           },
         },
+        {
+          opcode: 'whenPaneExpanded',
+          blockType: Scratch.BlockType.HAT,
+          text: 'When pane [ID] is expanded',
+          arguments: {
+            ID: { type: Scratch.ArgumentType.STRING, defaultValue: 'myPanel' },
+          },
+        },
+        {
+          opcode: 'whenPaneCollapsed',
+          blockType: Scratch.BlockType.HAT,
+          text: 'When pane [ID] is collapsed',
+          arguments: {
+            ID: { type: Scratch.ArgumentType.STRING, defaultValue: 'myPanel' },
+          },
+        },
       ],
     };
   }
@@ -309,6 +334,20 @@ class Tweakpane {
 
     const folder = pane.addFolder({
       title: TITLE,
+    });
+
+    // Initialize fold state (track using expanded property)
+    this.paneFoldStates[ID] = { expanded: folder.expanded, justToggled: false };
+
+    // Listen to fold/unfold events
+    folder.on('fold', () => {
+      this.paneFoldStates[ID].expanded = false;
+      this.paneFoldStates[ID].justToggled = 'collapsed';
+    });
+
+    folder.on('unfold', () => {
+      this.paneFoldStates[ID].expanded = true;
+      this.paneFoldStates[ID].justToggled = 'expanded';
     });
 
     this.panes[ID] = { pane, folder };
@@ -637,6 +676,43 @@ class Tweakpane {
     }
     
     return false;
+  }
+
+  whenPaneExpanded(args) {
+    const state = this.paneFoldStates[args.ID];
+    if (!state) {
+      return false;
+    }
+    
+    if (state.justToggled === 'expanded') {
+      state.justToggled = false;
+      return true;
+    }
+    
+    return false;
+  }
+
+  whenPaneCollapsed(args) {
+    const state = this.paneFoldStates[args.ID];
+    if (!state) {
+      return false;
+    }
+    
+    if (state.justToggled === 'collapsed') {
+      state.justToggled = false;
+      return true;
+    }
+    
+    return false;
+  }
+
+  isPaneOpen(args) {
+    const folder = this.panes[args.ID]?.folder;
+    if (!folder) {
+      return false;
+    }
+    
+    return folder.expanded;
   }
 
   removeAllPanels() {
