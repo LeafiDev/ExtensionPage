@@ -19,6 +19,12 @@ class Tweakpane {
       return;
     }
 
+    // Load Google Font
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap';
+    document.head.appendChild(fontLink);
+
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/tweakpane@3.0.7/dist/tweakpane.min.js';
     script.onload = () => {
@@ -314,6 +320,38 @@ class Tweakpane {
           arguments: {
             LABEL: { type: Scratch.ArgumentType.STRING, defaultValue: 'Count' },
             VALUE: { type: Scratch.ArgumentType.STRING, defaultValue: '0' },
+          },
+        },
+        {
+          opcode: 'text13',
+          blockType: Scratch.BlockType.LABEL,
+          text: 'Styling',
+        },
+        {
+          opcode: 'scalePane',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Scale pane [ID] to [SCALE]',
+          arguments: {
+            ID: { type: Scratch.ArgumentType.STRING, defaultValue: 'myPanel' },
+            SCALE: { type: Scratch.ArgumentType.NUMBER, defaultValue: 100 },
+          },
+        },
+        {
+          opcode: 'setFont',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Set font of pane [ID] to [FONT]',
+          arguments: {
+            ID: { type: Scratch.ArgumentType.STRING, defaultValue: 'myPanel' },
+            FONT: { type: Scratch.ArgumentType.STRING, defaultValue: 'Helvetica' },
+          },
+        },
+        {
+          opcode: 'setPaneColor',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Set background color of pane [ID] to [COLOR]',
+          arguments: {
+            ID: { type: Scratch.ArgumentType.STRING, defaultValue: 'myPanel' },
+            COLOR: { type: Scratch.ArgumentType.COLOR, defaultValue: '#ffffff' },
           },
         },
         '---',
@@ -886,6 +924,44 @@ class Tweakpane {
     if (elementData.input && elementData.input.refresh) {
       elementData.input.refresh();
     }
+  }
+
+  scalePane(args) {
+    const { ID, SCALE } = args;
+    const panelData = this.panes[ID];
+
+    if (!panelData || !panelData.pane) {
+      console.warn(`Pane "${ID}" not found`);
+      return;
+    }
+
+    const scaleValue = Math.max(0.1, (Number(SCALE) || 100) / 100);
+    panelData.pane.element.style.transform = `scale(${scaleValue})`;
+    panelData.pane.element.style.transformOrigin = 'top left';
+  }
+
+  setFont(args) {
+    const { ID, FONT } = args;
+    const panelData = this.panes[ID];
+
+    if (!panelData || !panelData.pane) {
+      console.warn(`Pane "${ID}" not found`);
+      return;
+    }
+
+    panelData.pane.element.style.fontFamily = FONT;
+  }
+
+  setPaneColor(args) {
+    const { ID, COLOR } = args;
+    const panelData = this.panes[ID];
+
+    if (!panelData || !panelData.pane) {
+      console.warn(`Pane "${ID}" not found`);
+      return;
+    }
+
+    panelData.pane.element.style.backgroundColor = COLOR;
   }
 }
 
