@@ -1,3 +1,6 @@
+(function (Scratch) {
+  "use strict";
+
 class OsuMap {
   getInfo() {
     return {
@@ -416,3 +419,4 @@ class OsuMap {
 }
 
 Scratch.extensions.register(new OsuMap());
+})(Scratch);
