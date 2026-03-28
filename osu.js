@@ -1,6 +1,7 @@
 (function (Scratch) {
   "use strict";
 
+
 class OsuMap {
   getInfo() {
     return {
