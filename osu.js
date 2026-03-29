@@ -43,22 +43,22 @@ class OsuMap {
         {
           opcode: 'getTitle',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'title'
+          text: 'Title'
         },
         {
           opcode: 'getArtist',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'artist'
+          text: 'Artist'
         },
         {
           opcode: 'getCreator',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'creator'
+          text: 'Creator'
         },
         {
           opcode: 'getDifficultyName',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'difficulty name'
+          text: 'Difficulty name'
         },
         '---',
         {
@@ -69,22 +69,22 @@ class OsuMap {
         {
           opcode: 'getCS',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'CS'
+          text: 'Circle Size'
         },
         {
           opcode: 'getAR',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'AR'
+          text: 'Approach Rate'
         },
         {
           opcode: 'getOD',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'OD'
+          text: 'Overall Difficulty'
         },
         {
           opcode: 'getHP',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'HP'
+          text: 'HP Drain'
         },
         '---',
         {
@@ -177,7 +177,7 @@ class OsuMap {
         {
           opcode: 'conversionLabel',
           blockType: Scratch.BlockType.LABEL,
-          text: 'Conversion Blocks'
+          text: 'Time Conversion'
         },
         {
           opcode: 'msToSeconds',
@@ -380,7 +380,7 @@ class OsuMap {
   getHitObjectX(args) {
     const index = parseInt(args.INDEX) - 1;
     if (index >= 0 && index < this.mapData.hitObjects.length) {
-      return this.mapData.hitObjects[index].x;
+      return this.mapData.hitObjects[index].x - 256;
     }
     return 0;
   }
@@ -388,7 +388,7 @@ class OsuMap {
   getHitObjectY(args) {
     const index = parseInt(args.INDEX) - 1;
     if (index >= 0 && index < this.mapData.hitObjects.length) {
-      return this.mapData.hitObjects[index].y;
+      return this.mapData.hitObjects[index].y - 192;
     }
     return 0;
   }
@@ -411,11 +411,11 @@ class OsuMap {
 
   // Conversion functions
   msToSeconds(args) {
-    return parseInt(args.MS) / 1000;
+    return args.MS / 1000;
   }
 
   secondsToMs(args) {
-    return parseInt(args.SECONDS) * 1000;
+    return args.SECONDS * 1000;
   }
 }
 
